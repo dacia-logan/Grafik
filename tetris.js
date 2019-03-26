@@ -143,8 +143,8 @@ function drawCubes(mv){
     }
 
     for(var i = 0; i<cubes.length; i++){
-        cubes[i].collision();
         cubes[i].move();
+        cubes[i].collision();
         cubes[i].draw(mv);
     }
 
