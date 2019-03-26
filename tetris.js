@@ -19,12 +19,6 @@ var s = [];
 var fieldBuffer;
 var blockBuffer;
 
-var xAxis = 0;
-var yAxis = 1;
-var zAxis = 2;
-
-var axis = 0;
-
 var movement = false;     // Do we rotate?
 var spinX = 0;
 var spinY = 0;
@@ -141,14 +135,14 @@ function quad(a, b, c, d)
 }
 
 
+var cubes = [];
+
 function drawCubes(mv){
     gl.bindBuffer( gl.ARRAY_BUFFER, blockBuffer );
     gl.vertexAttribPointer( vPosition, 3, gl.FLOAT, false, 0, 0 );
 
   
-
-    
-    var mvTemp = mv 
+    var mvTemp = mv;
 
     gl.uniform4fv( colorLoc, vec4(1.0, 0, 0.0, 1.0) );
 
@@ -170,10 +164,10 @@ function drawCubes(mv){
     mv3 = mult( mvTemp, translate(0.0, 2.0, 0.0));
     gl.uniformMatrix4fv(matrixLoc, false, flatten(mv3));
     gl.drawArrays( gl.TRIANGLES, 0,  NumVertices);
- 
-
 
 } 
+
+
  
 
 function field(mv){
@@ -269,6 +263,8 @@ function render()
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     var mv = mat4();
+
+
     mv = mult(mv, scalem(0.1,0.1,0.1));
     mv = mult( mv, rotateX(spinX) );
     mv = mult( mv, rotateY(spinY) );
