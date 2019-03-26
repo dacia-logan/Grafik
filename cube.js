@@ -1,5 +1,5 @@
 
-var gravity = 0.01
+var gravity = 0.01;
 
 class Cube {
     constructor(x,y,z){
@@ -40,11 +40,37 @@ class Cube {
     }
 
     collision(){
-      return false
+        if(this.y-2 < -9.9){
+            this.isDown = true;
+            return true;
+        }      
+            
+        return false
     }
 
     move(){
+        this.keyHandlers();
         if(!this.collision())
-            this.y -= gravity;
+            this.y -= gravity;   
+    }
+
+    moveCubeLeft(){
+        this.x-=1;
+    }
+
+    keyHandlers(){
+        if(!this.isDown)
+            if(eatKey(37)){
+                this.x-=1; 
+            }
+            else if(eatKey(39)){
+                this.x+=1; 
+            }   
+            else if(eatKey(40)){
+                this.z+=1; 
+            }   
+            else if(eatKey(38)){
+                this.z-=1; 
+            }  
     }
 }

@@ -31,13 +31,6 @@ var colorLoc;
 var matrixLoc;
 var vPosition;
 
-/*for (var i = 0; i < array.length; i++) {
-  array[i]
-}
-var spawnPoints=[];
-*/
-
-
 
 window.onload = function init()
 {
@@ -145,14 +138,21 @@ function quad(a, b, c, d)
 
 var cubes = [];
 
+var spawnPoints=[];
+for (var i = -2.5; i <= 2.5; i+=1) {
+  for (var y = -2.5; y <= 2.5; y+=1) {
+    spawnPoints.push([i,y])
+  }
+}
+
 function drawCubes(mv){
     if(cubes.length === 0 || cubes[cubes.length-1].isDown){
-        cubes[cubes.length] = new Cube();
+        var points = spawnPoints[Math.floor(Math.random()*36)];
+        cubes[cubes.length] = new Cube(points[0], 10, points[1]);
     }
 
     for(var i = 0; i<cubes.length; i++){
         cubes[i].move();
-        cubes[i].collision();
         cubes[i].draw(mv);
     }
 
