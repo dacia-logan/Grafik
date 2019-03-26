@@ -30,8 +30,13 @@ var setAlign = false;
 var colorLoc;
 var matrixLoc;
 var vPosition;
+for (var i = 0; i < array.length; i++) {
+  array[i]
+}
 var spawnPoints=[];
-var myCube=new Cube(0.1,0.1,1);
+
+
+
 
 window.onload = function init()
 {
@@ -256,6 +261,12 @@ function render()
 
     field(mv);
     myCube.draw(mv)
+    myCube1.draw(mv)
+    myCube2.draw(mv)
+    myCube3.draw(mv)
+    myCube4.draw(mv)
+    myCube5.draw(mv)
+
 
     requestAnimFrame( render );
 }
