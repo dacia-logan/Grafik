@@ -30,11 +30,13 @@ var setAlign = false;
 var colorLoc;
 var matrixLoc;
 var vPosition;
-for (var i = 0; i < array.length; i++) {
-  array[i]
-}
 var spawnPoints=[];
-
+for (var i = -2.5; i <= 2.5; i+=1) {
+  for (var y = -2.5; y <= 2.5; y+=1) {
+    spawnPoints.push([i,y])
+  }
+}
+var mycube=new Cube(spawnPoints[Math.floor(Math.random()*36)][0],10,spawnPoints[Math.floor(Math.random()*36)][1]);
 
 
 
@@ -260,12 +262,8 @@ function render()
     mv = mult( mv, rotateY(spinY) );
 
     field(mv);
-    myCube.draw(mv)
-    myCube1.draw(mv)
-    myCube2.draw(mv)
-    myCube3.draw(mv)
-    myCube4.draw(mv)
-    myCube5.draw(mv)
+    mycube.draw(mv);
+
 
 
     requestAnimFrame( render );
