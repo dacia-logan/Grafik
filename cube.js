@@ -1,4 +1,6 @@
 
+var gravity = 0.01
+
 class Cube {
     constructor(x,z,y){
         this.isDown = false;
@@ -17,7 +19,7 @@ class Cube {
         gl.uniform4fv( colorLoc, vec4(1.0, 0, 0.0, 1.0) );
 
         var mv1 = mat4();
-        mv1 = mult( mvTemp, translate(0.0, 0.0, 0.0));
+        mv1 = mult( mvTemp, translate(3.0, 0.0, 0.0));
         gl.uniformMatrix4fv(matrixLoc, false, flatten(mv1));
         gl.drawArrays( gl.TRIANGLES, 0,  NumVertices);
 
@@ -38,10 +40,11 @@ class Cube {
     }
 
     collision(){
-      
+      return false
     }
 
     move(){
-
+        if(!this.collision())
+            this.y -= gravity;
     }
 }
