@@ -1,15 +1,17 @@
 
 class Cube {
-    constructor(){
+    constructor(x,z,y){
         this.isDown = false;
-        this.spawnPoints = [];
+        this.x=x;
+        this.z=z;
+        this.y=y;
     }
 
     draw(mv){
         gl.bindBuffer( gl.ARRAY_BUFFER, blockBuffer );
         gl.vertexAttribPointer( vPosition, 3, gl.FLOAT, false, 0, 0 );
 
-  
+
         var mvTemp = mv;
 
         gl.uniform4fv( colorLoc, vec4(1.0, 0, 0.0, 1.0) );
@@ -36,11 +38,10 @@ class Cube {
     }
 
     collision(){
-
+      
     }
 
     move(){
-        
+
     }
 }
-

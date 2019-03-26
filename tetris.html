@@ -8,17 +8,17 @@ varying vec4 fColor;
 
 uniform mat4 mv;
 uniform mat4 projection;
-void main() 
+void main()
 {
     fColor = vColor;
     gl_Position =projection* mv* vPosition;
-} 
+}
 </script>
 
 <script id="fragment-shader" type="x-shader/x-fragment">
 
 precision mediump float;
-   
+
 varying vec4 fColor;
 
 uniform vec4 color;
@@ -33,6 +33,7 @@ main()
 <script type="text/javascript" src="webgl-utils.js"></script>
 <script type="text/javascript" src="initShaders.js"></script>
 <script type="text/javascript" src="MV.js"></script>
+<script type="text/javascript" src="cube.js"></script>
 <script type="text/javascript" src="tetris.js"></script>
 
 <body>
