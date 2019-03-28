@@ -8,7 +8,10 @@ class Cube {
         this.y=y;
         this.z=z;
         
-        this.rotZ = 0;
+        this.origX = x;
+        this.origY = y;
+        this.origZ = z;
+
     }
 
     draw(mv){
@@ -18,9 +21,9 @@ class Cube {
         var tempMv = mv;
 
         gl.uniform4fv( colorLoc, vec4(1.0, 0, 0.0, 1.0) );
-
+        
         var mv1 = mat4();
-        mv1 = mult( tempMv, translate(this.x, this.y-2, this.z));;
+        mv1 = mult( tempMv, translate(this.x, this.y-2, this.z));
         gl.uniformMatrix4fv(matrixLoc, false, flatten(mv1));
         gl.drawArrays( gl.TRIANGLES, 0,  NumVertices);
 
@@ -44,7 +47,7 @@ class Cube {
 
     move(){
         this.keyHandlers();
-
+        this.rotZ+=0.1;
         if(this.y-2 > -9.98)
             this.y -= gravity;
         else this.isDown = true;       
