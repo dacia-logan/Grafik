@@ -146,14 +146,21 @@ function quad(a, b, c, d)
 
 var cubes = [];
 
+var spawnPoints=[];
+for (var i = -2.5; i <= 2.5; i+=1) {
+  for (var y = -2.5; y <= 2.5; y+=1) {
+    spawnPoints.push([i,y])
+  }
+}
+
 function drawCubes(mv){
     if(cubes.length === 0 || cubes[cubes.length-1].isDown){
-        cubes[cubes.length] = new Cube();
+        var points = spawnPoints[Math.floor(Math.random()*36)];
+        cubes[cubes.length] = new Cube(points[0], 10, points[1]);
     }
 
     for(var i = 0; i<cubes.length; i++){
         cubes[i].move();
-        cubes[i].collision();
         cubes[i].draw(mv);
     }
 
@@ -261,9 +268,9 @@ function render()
     mv = mult( mv, rotateX(spinX) );
     mv = mult( mv, rotateY(spinY) );
 
-    field(mv);
-    mycube.draw(mv);
 
+    field(mv);
+    drawCubes(mv);
 
 
     requestAnimFrame( render );
