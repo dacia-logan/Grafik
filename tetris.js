@@ -36,7 +36,7 @@ for (var i = -2.5; i <= 2.5; i+=1) {
     spawnPoints.push([i,y])
   }
 }
-var mycube=new Cube(spawnPoints[Math.floor(Math.random()*36)][0],10,spawnPoints[Math.floor(Math.random()*36)][1]);
+var mycube=new Cube(spawnPoints[Math.floor(Math.random()*36)][0],7,spawnPoints[Math.floor(Math.random()*36)][1]);
 
 
 
