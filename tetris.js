@@ -156,7 +156,7 @@ for (var i = -2.5; i <= 2.5; i+=1) {
 function drawCubes(mv){
     if(cubes.length === 0 || cubes[cubes.length-1].isDown){
         var points = spawnPoints[Math.floor(Math.random()*36)];
-        cubes[cubes.length] = new Cube(points[0], 10, points[1]);
+        cubes[cubes.length] = new Cube(points[0], 9, points[1]);
     }
 
     for(var i = 0; i<cubes.length; i++){
@@ -268,10 +268,6 @@ function render()
     mv = mult( mv, rotateX(spinX) );
     mv = mult( mv, rotateY(spinY) );
 
-    var ms = mv;
-    console.log(ms);
-    ms = mult(ms, rotate(90, vec3(1,0,0))); 
-    console.log(ms);
     field(mv);
     drawCubes(mv);
 
