@@ -26,24 +26,10 @@ var origX;
 var origY;
 
 var setAlign = false;
-var positions=createArray(6,20,6);
 var colorLoc;
 var matrixLoc;
 var vPosition;
 var spawnPoints=[];
-for (var i = -2.5; i <= 2.5; i+=1) {
-  for (var y = -2.5; y <= 2.5; y+=1) {
-    spawnPoints.push([i,y])
-  }
-}
-
-for (var y = 0; y < 20; y++) {
-  for (var x = 0; x < 6; x++) {
-    for (var z = 0; z < 6; z++) {
-      positions[x][y][z]=0;
-    }
-  }
-}
 for (var i = -2.5; i <= 2.5; i+=1) {
   for (var y = -2.5; y <= 2.5; y+=1) {
     spawnPoints.push([i,y])
@@ -167,13 +153,13 @@ for (var i = -2.5; i <= 2.5; i+=1) {
 function drawCubes(mv){
     if(cubes.length === 0 || cubes[cubes.length-1].isDown){
         var points = spawnPoints[Math.floor(Math.random()*36)];
-        cubes[cubes.length] = new Cube(points[0], 10, points[1]);
+        cubes[cubes.length] = new Cube(points[0], 9, points[1]);
     }
 
     for(var i = 0; i<cubes.length; i++){
         cubes[i].move();
         cubes[i].draw(mv);
-        console.log('x:'+cubes[i].rotX+' y:'+cubes[i].rotY+' z;'+cubes[i].rotZ);
+
     }
 
 }
@@ -280,8 +266,6 @@ function render()
     mv = mult( mv, rotateX(spinX) );
     mv = mult( mv, rotateY(spinY) );
 
-    var ms = mv;
-    ms = mult(ms, rotate(90, vec3(1,0,0)));
     field(mv);
     drawCubes(mv);
 

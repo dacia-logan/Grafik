@@ -1,8 +1,8 @@
 
-var gravity = 0.01;
 
 class Cube {
     constructor(x,y,z){
+        this.gravity = 0.1;
         this.isDown = false;
         this.x=x;
         this.y=y;
@@ -22,23 +22,23 @@ class Cube {
         var mvTemp = mv;
 
         gl.uniform4fv( colorLoc, vec4(1.0, 0, 0.0, 1.0) );
+        mvTemp = mult( mvTemp, translate(this.x, this.y,this.z));
+        mvTemp = mult( mvTemp, rotateY( this.rotY ));
+        mvTemp = mult( mvTemp, rotateX( this.rotX ));
+        mvTemp = mult( mvTemp, rotateZ( this.rotZ ));
+        mvTemp = mult( mvTemp, scalem(1.0, 3.0, 1.0));
 
 
-        var mv2 = mat4();
-        mv2 = mult( mvTemp, translate(this.x, this.y, this.z));
-       /* mv2 = mult( mv2, rotateY( this.rotY ));
-        mv2 = mult( mv2, rotateX( this.rotX ));
-        mv2 = mult( mv2, rotateZ( this.rotZ ));*/
-        gl.uniformMatrix4fv(matrixLoc, false, flatten(mv2));
+        gl.uniformMatrix4fv(matrixLoc, false, flatten(mvTemp));
         gl.drawArrays( gl.TRIANGLES, 0,  NumVertices);
 
         gl.uniform4fv( colorLoc, vec4(0.0, 0, 1.0, 1.0) );
 
-
+/*
         var mv1 = mat4();
 
-        mv1 = mult( mvTemp, translate(this.x, this.y, this.z));
-        mv1 = mult( mv1, rotateY( this.rotY ));
+        mv1 = mult( mvTemp, translate(this.x, this.y+1, this.z));
+        mv1 = mult( mv2, rotateY( this.rotY ));
         mv1 = mult( mv1, rotateX( this.rotX ));
         mv1 = mult( mv1, rotateZ( this.rotZ ));
         mv1 = mult( mv1, translate(this.x-this.x, this.y-this.y+1, this.z-this.z));
@@ -51,24 +51,39 @@ class Cube {
 
 
         var mv3 = mat4();
-        mv3 = mult( mvTemp, translate(this.x, this.y, this.z));
-        mv3 = mult( mv3, rotateY( this.rotY ));
+        mv3 = mult( mvTemp, translate(this.x, this.y-1, this.z));
+        mv3 = mult( mv2, rotateY( this.rotY ));
         mv3 = mult( mv3, rotateX( this.rotX ));
         mv3 = mult( mv3, rotateZ( this.rotZ ));
         mv3 = mult( mv3, translate(this.x-this.x, this.y-this.y-1, this.z-this.z));
         gl.uniformMatrix4fv(matrixLoc, false, flatten(mv3));
         gl.drawArrays( gl.TRIANGLES, 0,  NumVertices);
 
-
+*/
     }
 
 
 
     move(){
         this.keyHandlers();
-        if(this.y > -9)
-            this.y -= gravity;
-        else this.isDown = true;
+        if (this.rotX===0 && this.rotZ===0) {
+          if (positions[2.5+this.x][Math.floor(11-this.y)][2.5+this.z]===0) {
+            this.y-=this.gravity;
+          }
+          else {
+            this.gravity=0;
+            this.isDown=true;
+          }
+          if (this.y<=-8.9) {
+            this.gravity=0;
+            this.isDown=true;
+          }
+          if (this.isDown) {
+            positions[2.5+this.x][Math.floor(8-this.y)][2.5+this.z]=1;
+            positions[2.5+this.x][Math.floor(9-this.y)][2.5+this.z]=1;
+            positions[2.5+this.x][Math.floor(10-this.y)][2.5+this.z]=1;
+          }
+        }
     }
 
 
@@ -94,7 +109,6 @@ class Cube {
             }
             else if(eatKey(83)){
                 this.rotY+=90;
-                ;
             }
             else if(eatKey(88)){
                 this.rotY-=90;
