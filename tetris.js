@@ -26,7 +26,6 @@ var origX;
 var origY;
 
 var setAlign = false;
-
 var colorLoc;
 var matrixLoc;
 var vPosition;
@@ -36,8 +35,6 @@ for (var i = -2.5; i <= 2.5; i+=1) {
     spawnPoints.push([i,y])
   }
 }
-var mycube=new Cube(spawnPoints[Math.floor(Math.random()*36)][0],7,spawnPoints[Math.floor(Math.random()*36)][1]);
-
 
 
 window.onload = function init()
@@ -114,7 +111,7 @@ function colorCube()
     quad( 1, 0, 3, 2 );
     quad( 2, 3, 7, 6 );
     quad( 3, 0, 4, 7 );
-    quad( 6, 5, 1, 2 ); 
+    quad( 6, 5, 1, 2 );
     quad( 4, 5, 6, 7 );
     quad( 5, 4, 0, 1 );
 
@@ -162,6 +159,7 @@ function drawCubes(mv){
     for(var i = 0; i<cubes.length; i++){
         cubes[i].move();
         cubes[i].draw(mv);
+
     }
 
 }

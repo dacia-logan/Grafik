@@ -1,8 +1,8 @@
 
-var gravity = 0.0;
 
 class Cube {
     constructor(x,y,z){
+        this.gravity = 0.02;
         this.isDown = false;
         this.x=x;
         this.y=y;
@@ -12,28 +12,29 @@ class Cube {
         this.rotY=0;
         this.rotZ=0;
 
+        this.color = vec4(Math.random(), Math.random(), Math.random(), 1);
     }
 
     draw(mv){
         gl.bindBuffer( gl.ARRAY_BUFFER, blockBuffer );
         gl.vertexAttribPointer( vPosition, 3, gl.FLOAT, false, 0, 0 );
 
-        
+
         var mvTemp = mv;
 
-        gl.uniform4fv( colorLoc, vec4(1.0, 0, 0.0, 1.0) );
+        gl.uniform4fv( colorLoc, this.color );
         mvTemp = mult( mvTemp, translate(this.x, this.y,this.z));
         mvTemp = mult( mvTemp, rotateY( this.rotY ));
         mvTemp = mult( mvTemp, rotateX( this.rotX ));
         mvTemp = mult( mvTemp, rotateZ( this.rotZ ));
         mvTemp = mult( mvTemp, scalem(1.0, 3.0, 1.0));
-        
+
 
         gl.uniformMatrix4fv(matrixLoc, false, flatten(mvTemp));
         gl.drawArrays( gl.TRIANGLES, 0,  NumVertices);
 
         gl.uniform4fv( colorLoc, vec4(0.0, 0, 1.0, 1.0) );
-        
+
 /*
         var mv1 = mat4();
 
@@ -58,7 +59,7 @@ class Cube {
         mv3 = mult( mv3, translate(this.x-this.x, this.y-this.y-1, this.z-this.z));
         gl.uniformMatrix4fv(matrixLoc, false, flatten(mv3));
         gl.drawArrays( gl.TRIANGLES, 0,  NumVertices);
-        
+
 */
     }
 
@@ -66,24 +67,100 @@ class Cube {
 
     move(){
         this.keyHandlers();
-        if(this.y > -8.9)
-            this.y -= gravity;
-        else this.isDown = true;
+        if(!this.isDown){
+            this.y-=this.gravity
+            this.collBottom();
+        }
+        else {    
+                positions[2.5+this.x][Math.floor(8-this.y)][2.5+this.z]=1;
+                positions[2.5+this.x][Math.floor(9-this.y)][2.5+this.z]=1;
+                positions[2.5+this.x][Math.floor(10-this.y)][2.5+this.z]=1;
+                this.y = Math.floor(this.y);
+            }
+        }
+    
+
+
+    collBottom() {
+        if(positions[2.5+this.x][Math.floor(11-this.y)][2.5+this.z]!==0)
+            this.isDown=true;
+        else if(this.y < -8.9){
+            this.isDown=true;
+        } 
     }
+
+    collideX(){
+
+            if(this.x === -2.5){
+                if(positions[2.5+this.x+1][Math.floor(11-this.y)][2.5+this.z]===0){
+                 return "right";
+                }
+            }
+            else if(this.x === 2.5){
+                if(positions[2.5+this.x-1][Math.floor(11-this.y)][2.5+this.z]===0){
+                    return "left";
+                }
+            }
+            else if(positions[2.5+this.x-1][Math.floor(11-this.y)][2.5+this.z]===0
+                 && positions[2.5+this.x+1][Math.floor(11-this.y)][2.5+this.z]!==0){
+                    return "left";
+                }
+            else if(positions[2.5+this.x+1][Math.floor(11-this.y)][2.5+this.z]===0
+                 && positions[2.5+this.x-1][Math.floor(11-this.y)][2.5+this.z]!==0){
+                    return "right";
+                } 
+            else if(positions[2.5+this.x+1][Math.floor(11-this.y)][2.5+this.z]!==0
+                && positions[2.5+this.x-1][Math.floor(11-this.y)][2.5+this.z]!==0) {
+                    return "none";
+                }    
+            else return "both";    
+
+        
+    }
+
+    
+    collideZ(){
+
+        if(this.z === -2.5){
+            if(positions[2.5+this.x][Math.floor(11-this.y)][2.5+this.z+1]===0){
+             return "back";
+            }
+        }
+        else if(this.z === 2.5){
+            if(positions[2.5+this.x][Math.floor(11-this.y)][2.5+this.z-1]===0){
+                return "front";
+            }
+        }
+        else if(positions[2.5+this.x][Math.floor(11-this.y)][2.5+this.z-1]===0
+             && positions[2.5+this.x][Math.floor(11-this.y)][2.5+this.z+1]!==0){
+                return "front";
+            }
+        else if(positions[2.5+this.x][Math.floor(11-this.y)][2.5+this.z+1]===0
+             && positions[2.5+this.x][Math.floor(11-this.y)][2.5+this.z-1]!==0){
+                return "back";
+            } 
+        else if(positions[2.5+this.x][Math.floor(11-this.y)][2.5+this.z+1]!==0
+            && positions[2.5+this.x][Math.floor(11-this.y)][2.5+this.z-1]!==0) {
+                return "none";
+            }    
+        else return "both";    
+
+    
+}
 
 
     keyHandlers(){
         if(!this.isDown)
-            if(eatKey(37) && this.x > -2){
+            if(eatKey(37) && (this.collideX() === "left" || this.collideX() === "both")){
                 this.x-=1;
             }
-            else if(eatKey(39) && this.x < 2){
+            else if(eatKey(39) && (this.collideX() === "right" || this.collideX() === "both")){
                 this.x+=1;
             }
-            else if(eatKey(40) && this.z < 2){
+            else if(eatKey(40) && (this.collideZ() === "back" || this.collideZ() === "both")){
                 this.z+=1;
             }
-            else if(eatKey(38) && this.z > -2){
+            else if(eatKey(38) && (this.collideZ() === "front" || this.collideZ() === "both")){
                 this.z-=1;
             }
             else if(eatKey(65)){
@@ -96,7 +173,8 @@ class Cube {
                 this.rotY+=90;
             }
             else if(eatKey(88)){
-                this.rotY-=90;   
+                this.rotY-=90;
+
             }
             else if(eatKey(68)){
                 this.rotZ+=90;
@@ -104,6 +182,6 @@ class Cube {
             else if(eatKey(67)){
                 this.rotZ-=90;
             }
-           
+
     }
 }
