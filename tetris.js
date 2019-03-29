@@ -26,7 +26,7 @@ var origX;
 var origY;
 
 var setAlign = false;
-
+var positions=createArray(6,20,6);
 var colorLoc;
 var matrixLoc;
 var vPosition;
@@ -36,8 +36,19 @@ for (var i = -2.5; i <= 2.5; i+=1) {
     spawnPoints.push([i,y])
   }
 }
-var mycube=new Cube(spawnPoints[Math.floor(Math.random()*36)][0],7,spawnPoints[Math.floor(Math.random()*36)][1]);
 
+for (var y = 0; y < 20; y++) {
+  for (var x = 0; x < 6; x++) {
+    for (var z = 0; z < 6; z++) {
+      positions[x][y][z]=0;
+    }
+  }
+}
+for (var i = -2.5; i <= 2.5; i+=1) {
+  for (var y = -2.5; y <= 2.5; y+=1) {
+    spawnPoints.push([i,y])
+  }
+}
 
 
 window.onload = function init()
