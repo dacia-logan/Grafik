@@ -8,10 +8,10 @@ class Cube {
         this.y=y;
         this.z=z;
 
-
         this.rotX=0;
         this.rotY=0;
         this.rotZ=0;
+
     }
 
     draw(mv){
@@ -26,6 +26,9 @@ class Cube {
 
         var mv2 = mat4();
         mv2 = mult( mvTemp, translate(this.x, this.y, this.z));
+       /* mv2 = mult( mv2, rotateY( this.rotY ));
+        mv2 = mult( mv2, rotateX( this.rotX ));
+        mv2 = mult( mv2, rotateZ( this.rotZ ));*/
         gl.uniformMatrix4fv(matrixLoc, false, flatten(mv2));
         gl.drawArrays( gl.TRIANGLES, 0,  NumVertices);
 
@@ -34,10 +37,13 @@ class Cube {
 
         var mv1 = mat4();
 
-        mv1 = mult( mvTemp, translate(this.x, this.y+1, this.z));
-        mv1= mult(mv2, rotateX(this.rotX));
+        mv1 = mult( mvTemp, translate(this.x, this.y, this.z));
+        mv1 = mult( mv1, rotateY( this.rotY ));
+        mv1 = mult( mv1, rotateX( this.rotX ));
+        mv1 = mult( mv1, rotateZ( this.rotZ ));
         mv1 = mult( mv1, translate(this.x-this.x, this.y-this.y+1, this.z-this.z));
-        
+
+
         gl.uniformMatrix4fv(matrixLoc, false, flatten(mv1));
         gl.drawArrays( gl.TRIANGLES, 0,  NumVertices);
 
@@ -45,13 +51,14 @@ class Cube {
 
 
         var mv3 = mat4();
-        mv3 = mult( mvTemp, translate(this.x, this.y-1, this.z));
-        mv3= mult(mv2, rotateX(this.rotX));
+        mv3 = mult( mvTemp, translate(this.x, this.y, this.z));
+        mv3 = mult( mv3, rotateY( this.rotY ));
+        mv3 = mult( mv3, rotateX( this.rotX ));
+        mv3 = mult( mv3, rotateZ( this.rotZ ));
         mv3 = mult( mv3, translate(this.x-this.x, this.y-this.y-1, this.z-this.z));
         gl.uniformMatrix4fv(matrixLoc, false, flatten(mv3));
         gl.drawArrays( gl.TRIANGLES, 0,  NumVertices);
         
-      
 
     }
 
@@ -79,17 +86,25 @@ class Cube {
             else if(eatKey(38) && this.z > -2){
                 this.z-=1;
             }
-            else if(eatKey(65) && this.z > -2){
+            else if(eatKey(65)){
                 this.rotX+=90;
             }
-            else if(eatKey(90) && this.z > -2){
+            else if(eatKey(90)){
                 this.rotX-=90;
             }
-            else if(eatKey(83) && this.z > -2){
+            else if(eatKey(83)){
                 this.rotY+=90;
+                ;
             }
-            else if(eatKey(88) && this.z > -2){
+            else if(eatKey(88)){
                 this.rotY-=90;
+                
+            }
+            else if(eatKey(68)){
+                this.rotZ+=90;
+            }
+            else if(eatKey(67)){
+                this.rotZ-=90;
             }
            
     }
