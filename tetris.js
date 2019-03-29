@@ -173,6 +173,7 @@ function drawCubes(mv){
     for(var i = 0; i<cubes.length; i++){
         cubes[i].move();
         cubes[i].draw(mv);
+        console.log('x:'+cubes[i].rotX+' y:'+cubes[i].rotY+' z;'+cubes[i].rotZ);
     }
 
 }
@@ -279,6 +280,8 @@ function render()
     mv = mult( mv, rotateX(spinX) );
     mv = mult( mv, rotateY(spinY) );
 
+    var ms = mv;
+    ms = mult(ms, rotate(90, vec3(1,0,0)));
     field(mv);
     drawCubes(mv);
 
