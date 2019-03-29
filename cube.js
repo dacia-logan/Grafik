@@ -96,8 +96,7 @@ class Cube {
                 this.rotY+=90;
             }
             else if(eatKey(88)){
-                this.rotY-=90;
-                
+                this.rotY-=90;   
             }
             else if(eatKey(68)){
                 this.rotZ+=90;
