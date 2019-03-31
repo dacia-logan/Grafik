@@ -2,7 +2,7 @@
 
 class Cube {
     constructor(x,y,z){
-        this.gravity = 0.1;
+        this.gravity = 0;
         this.isDown = false;
         this.x=x;
         this.y=y;
@@ -11,6 +11,8 @@ class Cube {
         this.rotX=0;
         this.rotY=0;
         this.rotZ=0;
+
+        this.colVec=[Math.random(),Math.random(),Math.random(),Math.random()];
 
     }
 
@@ -21,7 +23,7 @@ class Cube {
 
         var mvTemp = mv;
 
-        gl.uniform4fv( colorLoc, vec4(1.0, 0, 0.0, 1.0) );
+        gl.uniform4fv( colorLoc, vec4(this.colVec[0], this.colVec[1], this.colVec[2],1) );
         mvTemp = mult( mvTemp, translate(this.x, this.y,this.z));
         mvTemp = mult( mvTemp, rotateY( this.rotY ));
         mvTemp = mult( mvTemp, rotateX( this.rotX ));
@@ -61,27 +63,190 @@ class Cube {
 
 */
     }
+    align(){
+      if (this.rotX%180===0 && this.rotZ%180===0) {
+        return 0;
+      }
+      else if ((this.rotX%180!==0 && this.rotY%180===0 && this.rotZ%180===0)||
+              (this.rotY%180!==0 && this.rotZ%180!==0)) {
+      return 1;
+      }
+      else {
+      return 2;
+      }
+    }
+    getNextAlign(rotX,rotY,rotZ){
+      if (rotX+this.rotX%180===0 && rotZ+this.rotZ%180===0) {
+        return 0;
+      }
+      else if ((rotX+this.rotX%180!==0 && rotY+this.rotY%180===0 && rotZ+this.rotZ%180===0)||
+              (rotY+this.rotY%180!==0 && rotZ+this.rotZ%180!==0)) {
+      return 1;
+      }
+      else if((rotY+this.rotY%180===0 && rotZ+this.rotZ%180!==0)||
+              (rotX+this.rotX%180!==0 && rotY+this.rotY%180!==0 && rotZ+this.rotZ%180===0)){
+      return 2;
+      }
+    }
 
+    setPos(){
+      this.gravity=0;
+      this.isDown=true;
+      if (this.align()===0) {
+        positions[2.5+this.x][Math.floor(8-this.y)][2.5+this.z]=1;
+        positions[2.5+this.x][Math.floor(9-this.y)][2.5+this.z]=1;
+        positions[2.5+this.x][Math.floor(10-this.y)][2.5+this.z]=1;
+        this.y=Math.floor(this.y)+0.2;
+      }
+      else if (this.align()===1) {
+        positions[2.5+this.x][Math.floor(9-this.y)][2.5+this.z-1]=1;
+        positions[2.5+this.x][Math.floor(9-this.y)][2.5+this.z]=1;
+        positions[2.5+this.x][Math.floor(9-this.y)][2.5+this.z+1]=1;
+        this.y=Math.floor(this.y)+0.2;
+      }
+      else {
+        positions[2.5+this.x-1][Math.floor(9-this.y)][2.5+this.z]=1;
+        positions[2.5+this.x][Math.floor(9-this.y)][2.5+this.z]=1;
+        positions[2.5+this.x+1][Math.floor(9-this.y)][2.5+this.z]=1;
+        this.y=Math.floor(this.y)+0.2;
+      }
+    }
+    boxCollision(){
+      
+    }
+    xRotation(dir){
+      if (this.align()===0) {
+        if(this.z===2.5 && this.getNextAlign(-90,0,0)===1){
+          this.z-=1;
+          this.rotX+=dir;
+        }
+        else if(this.z===-2.5 && this.getNextAlign(-90,0,0)===1){
+          this.z+=1;
+          this.rotX+=dir;
+        }
+        else if(this.x===2.5 && this.getNextAlign(-90,0,0)===2){
+          this.x-=1;
+          this.rotX+=dir;
+        }
+        else if(this.x===-2.5 && this.getNextAlign(-90,0,0)===2){
+          this.x+=1;
+          this.rotX+=dir;
+        }
+        else {
+          this.rotX+=dir;
+        }
+      }
+      else {
+        this.rotX+=dir;
+      }
+    }
 
+    yRotation(dir){
+      if (this.align()===1) {
+        if(this.x===2.5 && this.getNextAlign(0,-90,0)===2){
+          this.x-=1;
+          this.rotY+=dir;
+        }
+        else if(this.x===-2.5 && this.getNextAlign(0,-90,0)===2){
+          this.x+=1;
+          this.rotY+=dir;
+        }
+        else {
+          this.rotY+=dir;
+        }
+      }
+      else if (this.align()===2) {
+        if(this.z===2.5 && this.getNextAlign(0,-90,0)===1){
+          this.z-=1;
+          this.rotY+=dir;
+        }
+        else if(this.z===-2.5 && this.getNextAlign(0,-90,0)===1){
+          this.z+=1;
+          this.rotY+=dir;
+        }
+        else {
+          this.rotY+=dir;
+        }
+      }
+      else {
+        this.rotY+=dir;
+      }
+    }
+    zRotation(dir){
+      if (this.align()===0) {
+        if(this.z===2.5 && this.getNextAlign(0,0,-90)===1){
+          this.z-=1;
+          this.rotZ+=dir;
+        }
+        else if(this.z===-2.5 && this.getNextAlign(0,0,-90)===1){
+          this.z+=1;
+          this.rotZ+=dir;
+        }
+        else if(this.x===2.5 && this.getNextAlign(0,0,-90)===2){
+          this.x-=1;
+          this.rotZ+=dir;
+        }
+        else if(this.x===-2.5 && this.getNextAlign(0,0,-90)===2){
+          this.x+=1;
+          this.rotZ+=dir;
+        }
+        else {
+          this.rotZ+=dir;
+        }
+      }
+      else if (this.align()===1) {
+        if(this.x===2.5 && this.getNextAlign(0,0,-90)===2){
+          this.x-=1;
+          this.rotZ+=dir;
+        }
+        else if(this.x===-2.5 && this.getNextAlign(0,0,-90)===2){
+          this.x+=1;
+          this.rotZ+=dir;
+        }
+        else {
+          this.rotZ+=dir;
+        }
+      }
+      else if (this.align()===2) {
+        if(this.z===2.5 && this.getNextAlign(0,0,-90)===1){
+          this.z-=1;
+          this.rotZ+=dir;
+        }
+        else if(this.z===-2.5 && this.getNextAlign(0,0,-90)===1){
+          this.z+=1;
+          this.rotZ+=dir;
+        }
+        else {
+          this.rotZ+=dir;
+        }
+      }
+      else {
+        this.rotZ+=dir;
+      }
+    }
 
     move(){
+        this.y-=this.gravity;
         this.keyHandlers();
-        if (this.rotX===0 && this.rotZ===0) {
-          if (positions[2.5+this.x][Math.floor(11-this.y)][2.5+this.z]===0) {
-            this.y-=this.gravity;
+        if (this.align()===0){
+          if (positions[2.5+this.x][Math.floor(11-this.y)][2.5+this.z]===1 ||this.y<=-8.9) {
+            this.setPos()
           }
-          else {
-            this.gravity=0;
-            this.isDown=true;
+        }
+        if (this.align()===1){
+          if (positions[2.5+this.x][Math.floor(10-this.y)][2.5+this.z-1]===1 ||
+              positions[2.5+this.x][Math.floor(10-this.y)][2.5+this.z]===1 ||
+              positions[2.5+this.x][Math.floor(10-this.y)][2.5+this.z+1]===1 ||
+              this.y<=-9.9) {
+            this.setPos()
           }
-          if (this.y<=-8.9) {
-            this.gravity=0;
-            this.isDown=true;
-          }
-          if (this.isDown) {
-            positions[2.5+this.x][Math.floor(8-this.y)][2.5+this.z]=1;
-            positions[2.5+this.x][Math.floor(9-this.y)][2.5+this.z]=1;
-            positions[2.5+this.x][Math.floor(10-this.y)][2.5+this.z]=1;
+        }
+        if (this.align()===2){
+          if (positions[2.5+this.x-1][Math.floor(10-this.y)][2.5+this.z]===1 ||
+              positions[2.5+this.x][Math.floor(10-this.y)][2.5+this.z]===1 ||
+              positions[2.5+this.x+1][Math.floor(10-this.y)][2.5+this.z]===1 ||
+              this.y<=-8.9) {
+            this.setPos()
           }
         }
     }
@@ -102,23 +267,22 @@ class Cube {
                 this.z-=1;
             }
             else if(eatKey(65)){
-                this.rotX+=90;
+                this.xRotation(90);
             }
             else if(eatKey(90)){
-                this.rotX-=90;
+                this.xRotation(270);
             }
             else if(eatKey(83)){
-                this.rotY+=90;
+                this.yRotation(90);
             }
             else if(eatKey(88)){
-                this.rotY-=90;
-
+                this.yRotation(270);
             }
             else if(eatKey(68)){
-                this.rotZ+=90;
+                this.zRotation(90);
             }
             else if(eatKey(67)){
-                this.rotZ-=90;
+                this.zRotation(270);
             }
 
     }
