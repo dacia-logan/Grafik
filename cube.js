@@ -2,7 +2,7 @@
 
 class Cube {
     constructor(x,y,z){
-        this.gravity = 0;
+        this.gravity = 0.02;
         this.isDown = false;
         this.x=x;
         this.y=y;
@@ -12,8 +12,7 @@ class Cube {
         this.rotY=0;
         this.rotZ=0;
 
-        this.colVec=[Math.random(),Math.random(),Math.random(),Math.random()];
-
+        this.color = vec4(Math.random(), Math.random(), Math.random(), 1);
     }
 
     draw(mv){
@@ -23,7 +22,7 @@ class Cube {
 
         var mvTemp = mv;
 
-        gl.uniform4fv( colorLoc, vec4(this.colVec[0], this.colVec[1], this.colVec[2],1) );
+        gl.uniform4fv( colorLoc, this.color );
         mvTemp = mult( mvTemp, translate(this.x, this.y,this.z));
         mvTemp = mult( mvTemp, rotateY( this.rotY ));
         mvTemp = mult( mvTemp, rotateX( this.rotX ));
@@ -112,7 +111,7 @@ class Cube {
       }
     }
     boxCollision(){
-      
+
     }
     xRotation(dir){
       if (this.align()===0) {
@@ -251,19 +250,78 @@ class Cube {
         }
     }
 
+    collideX(){
+
+            if(this.x === -2.5){
+                if(positions[2.5+this.x+1][Math.floor(11-this.y)][2.5+this.z]===0){
+                 return "right";
+                }
+            }
+            else if(this.x === 2.5){
+                if(positions[2.5+this.x-1][Math.floor(11-this.y)][2.5+this.z]===0){
+                    return "left";
+                }
+            }
+            else if(positions[2.5+this.x-1][Math.floor(11-this.y)][2.5+this.z]===0
+                 && positions[2.5+this.x+1][Math.floor(11-this.y)][2.5+this.z]!==0){
+                    return "left";
+                }
+            else if(positions[2.5+this.x+1][Math.floor(11-this.y)][2.5+this.z]===0
+                 && positions[2.5+this.x-1][Math.floor(11-this.y)][2.5+this.z]!==0){
+                    return "right";
+                }
+            else if(positions[2.5+this.x+1][Math.floor(11-this.y)][2.5+this.z]!==0
+                && positions[2.5+this.x-1][Math.floor(11-this.y)][2.5+this.z]!==0) {
+                    return "none";
+                }
+            else return "both";
+
+
+    }
+
+
+    collideZ(){
+
+        if(this.z === -2.5){
+            if(positions[2.5+this.x][Math.floor(11-this.y)][2.5+this.z+1]===0){
+             return "back";
+            }
+        }
+        else if(this.z === 2.5){
+            if(positions[2.5+this.x][Math.floor(11-this.y)][2.5+this.z-1]===0){
+                return "front";
+            }
+        }
+        else if(positions[2.5+this.x][Math.floor(11-this.y)][2.5+this.z-1]===0
+             && positions[2.5+this.x][Math.floor(11-this.y)][2.5+this.z+1]!==0){
+                return "front";
+            }
+        else if(positions[2.5+this.x][Math.floor(11-this.y)][2.5+this.z+1]===0
+             && positions[2.5+this.x][Math.floor(11-this.y)][2.5+this.z-1]!==0){
+                return "back";
+            }
+        else if(positions[2.5+this.x][Math.floor(11-this.y)][2.5+this.z+1]!==0
+            && positions[2.5+this.x][Math.floor(11-this.y)][2.5+this.z-1]!==0) {
+                return "none";
+            }
+        else return "both";
+
+
+}
+
 
     keyHandlers(){
         if(!this.isDown)
-            if(eatKey(37) && this.x > -2){
+            if(eatKey(37) && (this.collideX() === "left" || this.collideX() === "both")){
                 this.x-=1;
             }
-            else if(eatKey(39) && this.x < 2){
+            else if(eatKey(39) && (this.collideX() === "right" || this.collideX() === "both")){
                 this.x+=1;
             }
-            else if(eatKey(40) && this.z < 2){
+            else if(eatKey(40) && (this.collideZ() === "back" || this.collideZ() === "both")){
                 this.z+=1;
             }
-            else if(eatKey(38) && this.z > -2){
+            else if(eatKey(38) && (this.collideZ() === "front" || this.collideZ() === "both")){
                 this.z-=1;
             }
             else if(eatKey(65)){
