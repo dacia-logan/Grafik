@@ -12,6 +12,11 @@ class Cube {
         this.rotY=0;
         this.rotZ=0;
 
+        this.front=0;
+        this.back=0;
+        this.right=0;
+        this.left=0;
+
         this.color = vec4(Math.random(), Math.random(), Math.random(), 1);
     }
 
@@ -110,9 +115,7 @@ class Cube {
         this.y=Math.floor(this.y)+0.2;
       }
     }
-    boxCollision(){
 
-    }
     xRotation(dir){
       if (this.align()===0) {
         if(this.z===2.5 && this.getNextAlign(-90,0,0)===1){
@@ -223,13 +226,104 @@ class Cube {
         this.rotZ+=dir;
       }
     }
-
+    around(){
+      if (this.z<2 && this.y<8) {
+        if (this.align()===0) {
+          if (positions[2.5+this.x][Math.floor(8-this.y)][2.5+this.z+1]===1
+            ||positions[2.5+this.x][Math.floor(9-this.y)][2.5+this.z+1]===1
+            ||positions[2.5+this.x][Math.floor(10-this.y)][2.5+this.z+1]===1) {
+            this.front=1;
+            console.log("FRONT");
+          }
+          else if (this.align()===1) {
+            if (positions[2.5+this.x-1][Math.floor(9-this.y)][2.5+this.z+1]===1
+              ||positions[2.5+this.x][Math.floor(9-this.y)][2.5+this.z+1]===1
+              ||positions[2.5+this.x+1][Math.floor(9-this.y)][2.5+this.z+1]===1) {
+              this.front=1
+              console.log("FRONT");
+            }
+          }
+          else if (this.align()===2 && this.z<1) {
+            if (positions[2.5+this.x][Math.floor(9-this.y)][2.5+this.z+2]===1) {
+                this.front=1
+                console.log("FRONT");
+            }
+          }
+        }
+      }
+      if (this.z>-2 && this.y<8) {
+        if (this.align()===0) {
+          if (positions[2.5+this.x][Math.floor(8-this.y)][2.5+this.z-1]===1
+            ||positions[2.5+this.x][Math.floor(9-this.y)][2.5+this.z-1]===1
+            ||positions[2.5+this.x][Math.floor(10-this.y)][2.5+this.z-1]===1) {
+              this.back=1;
+          }
+          else if (this.align()===1) {
+            if (positions[2.5+this.x-1][Math.floor(9-this.y)][2.5+this.z-1]===1
+              ||positions[2.5+this.x][Math.floor(9-this.y)][2.5+this.z-1]===1
+              ||positions[2.5+this.x+1][Math.floor(9-this.y)][2.5+this.z-1]===1) {
+                this.back=1;
+            }
+          }
+          else if (this.align()===2 && this.z>-1) {
+            if (positions[2.5+this.x][Math.floor(9-this.y)][2.5+this.z-2]===1) {
+                this.back=1;
+            }
+          }
+        }
+      }
+      if (this.x<2 && this.y<8) {
+        if (this.align()===0) {
+          if (positions[2.5+this.x+1][Math.floor(8-this.y)][2.5+this.z]===1
+            ||positions[2.5+this.x+1][Math.floor(9-this.y)][2.5+this.z]===1
+            ||positions[2.5+this.x+1][Math.floor(10-this.y)][2.5+this.z]===1) {
+              this.right=1;
+          }
+          else if (this.align()===2) {
+            if (positions[2.5+this.x+1][Math.floor(9-this.y)][2.5+this.z-1]===1
+              ||positions[2.5+this.x+1][Math.floor(9-this.y)][2.5+this.z]===1
+              ||positions[2.5+this.x+1][Math.floor(9-this.y)][2.5+this.z+1]===1) {
+                this.right=1;
+            }
+          }
+          else if (this.align()===1 && this.x<1) {
+            if (positions[2.5+this.x+2][Math.floor(9-this.y)][2.5+this.z]===1) {
+              this.right=1;
+            }
+          }
+        }
+      }
+      if (this.x>-2 && this.y<8) {
+        if (this.align()===0) {
+          if (positions[2.5+this.x-1][Math.floor(8-this.y)][2.5+this.z]===1
+            ||positions[2.5+this.x-1][Math.floor(9-this.y)][2.5+this.z]===1
+            ||positions[2.5+this.x-1][Math.floor(10-this.y)][2.5+this.z]===1) {
+              this.left=1;
+          }
+          else if (this.align()===2) {
+            if (positions[2.5+this.x-1][Math.floor(9-this.y)][2.5+this.z-1]===1
+              ||positions[2.5+this.x-1][Math.floor(9-this.y)][2.5+this.z]===1
+              ||positions[2.5+this.x-1][Math.floor(9-this.y)][2.5+this.z+1]===1) {
+                this.left=1;
+            }
+          }
+          else if (this.align()===1 && this.x>-1) {
+            if (positions[2.5+this.x-2][Math.floor(9-this.y)][2.5+this.z]===1) {
+              this.left=1;
+            }
+          }
+        }
+      }
+    }
     move(){
         this.y-=this.gravity;
         this.keyHandlers();
         if (this.align()===0){
           if (positions[2.5+this.x][Math.floor(11-this.y)][2.5+this.z]===1 ||this.y<=-8.9) {
             this.setPos()
+          }
+          else if (this.y>-8.8) {
+            this.gravity=0.02;
           }
         }
         if (this.align()===1){
@@ -239,92 +333,70 @@ class Cube {
               this.y<=-9.9) {
             this.setPos()
           }
+          else if (this.y>-8.8) {
+            this.gravity=0.02;
+          }
         }
         if (this.align()===2){
           if (positions[2.5+this.x-1][Math.floor(10-this.y)][2.5+this.z]===1 ||
               positions[2.5+this.x][Math.floor(10-this.y)][2.5+this.z]===1 ||
               positions[2.5+this.x+1][Math.floor(10-this.y)][2.5+this.z]===1 ||
-              this.y<=-8.9) {
+              this.y<=-9.9) {
             this.setPos()
+          }
+          else if (this.y>-8.8) {
+            this.gravity=0.02;
           }
         }
     }
 
-    collideX(){
-
-            if(this.x === -2.5){
-                if(positions[2.5+this.x+1][Math.floor(11-this.y)][2.5+this.z]===0){
-                 return "right";
-                }
-            }
-            else if(this.x === 2.5){
-                if(positions[2.5+this.x-1][Math.floor(11-this.y)][2.5+this.z]===0){
-                    return "left";
-                }
-            }
-            else if(positions[2.5+this.x-1][Math.floor(11-this.y)][2.5+this.z]===0
-                 && positions[2.5+this.x+1][Math.floor(11-this.y)][2.5+this.z]!==0){
-                    return "left";
-                }
-            else if(positions[2.5+this.x+1][Math.floor(11-this.y)][2.5+this.z]===0
-                 && positions[2.5+this.x-1][Math.floor(11-this.y)][2.5+this.z]!==0){
-                    return "right";
-                }
-            else if(positions[2.5+this.x+1][Math.floor(11-this.y)][2.5+this.z]!==0
-                && positions[2.5+this.x-1][Math.floor(11-this.y)][2.5+this.z]!==0) {
-                    return "none";
-                }
-            else return "both";
-
-
-    }
-
-
-    collideZ(){
-
-        if(this.z === -2.5){
-            if(positions[2.5+this.x][Math.floor(11-this.y)][2.5+this.z+1]===0){
-             return "back";
-            }
-        }
-        else if(this.z === 2.5){
-            if(positions[2.5+this.x][Math.floor(11-this.y)][2.5+this.z-1]===0){
-                return "front";
-            }
-        }
-        else if(positions[2.5+this.x][Math.floor(11-this.y)][2.5+this.z-1]===0
-             && positions[2.5+this.x][Math.floor(11-this.y)][2.5+this.z+1]!==0){
-                return "front";
-            }
-        else if(positions[2.5+this.x][Math.floor(11-this.y)][2.5+this.z+1]===0
-             && positions[2.5+this.x][Math.floor(11-this.y)][2.5+this.z-1]!==0){
-                return "back";
-            }
-        else if(positions[2.5+this.x][Math.floor(11-this.y)][2.5+this.z+1]!==0
-            && positions[2.5+this.x][Math.floor(11-this.y)][2.5+this.z-1]!==0) {
-                return "none";
-            }
-        else return "both";
-
-
-}
-
 
     keyHandlers(){
-        if(!this.isDown)
-            if(eatKey(37) && (this.collideX() === "left" || this.collideX() === "both")){
-                this.x-=1;
+        if(!this.isDown){
+          this.around();
+          if (this.align()===0) {
+            if(eatKey(37) && this.x>-2 && this.left===0){
+              this.x-=1;
             }
-            else if(eatKey(39) && (this.collideX() === "right" || this.collideX() === "both")){
-                this.x+=1;
+            else if(eatKey(39) && this.x<2 && this.right===0){
+              this.x+=1;
             }
-            else if(eatKey(40) && (this.collideZ() === "back" || this.collideZ() === "both")){
-                this.z+=1;
+            else if(eatKey(40) && this.z<2 && this.front===0){
+              this.z+=1;
             }
-            else if(eatKey(38) && (this.collideZ() === "front" || this.collideZ() === "both")){
-                this.z-=1;
+            else if(eatKey(38) && this.z>-2 && this.back===0){
+              this.z-=1;
             }
-            else if(eatKey(65)){
+          }
+          else if (this.align()===1) {
+            if(eatKey(37) && this.x>-2 && this.left===0){
+              this.x-=1;
+            }
+            else if(eatKey(39) && this.x<2 && this.right===0){
+              this.x+=1;
+            }
+            else if(eatKey(40) && this.z<1 && this.front===0){
+              this.z+=1;
+            }
+            else if(eatKey(38) && this.z>-1 && this.back===0){
+              this.z-=1;
+            }
+          }
+          else if (this.align()===2) {
+            if(eatKey(37) && this.x>-1 && this.left===0){
+              this.x-=1;
+            }
+            else if(eatKey(39) && this.x<1 && this.right===0){
+              this.x+=1;
+            }
+            else if(eatKey(40) && this.z<2 && this.front===0){
+              this.z+=1;
+            }
+            else if(eatKey(38) && this.z>-2 && this.back===0){
+              this.z-=1;
+            }
+          }
+            if(eatKey(65)){
                 this.xRotation(90);
             }
             else if(eatKey(90)){
@@ -342,6 +414,10 @@ class Cube {
             else if(eatKey(67)){
                 this.zRotation(270);
             }
-
+            this.left=0;
+            this.front=0;
+            this.back=0;
+            this.right=0;
     }
+  }
 }

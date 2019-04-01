@@ -159,7 +159,7 @@ function drawCubes(mv){
     for(var i = 0; i<cubes.length; i++){
         cubes[i].move();
         cubes[i].draw(mv);
-        console.log(cubes[i].x+ ", "+cubes[i].z);
+        
 
     }
 
