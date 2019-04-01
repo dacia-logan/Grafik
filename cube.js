@@ -2,11 +2,13 @@
 
 class Cube {
     constructor(x,y,z){
-        this.gravity = 0.02;
+        this.gravity = 0.05;
         this.isDown = false;
         this.x=x;
         this.y=y;
         this.z=z;
+
+        this.level;
 
         this.rotX=0;
         this.rotY=0;
@@ -101,18 +103,23 @@ class Cube {
         positions[2.5+this.x][Math.floor(9-this.y)][2.5+this.z]=1;
         positions[2.5+this.x][Math.floor(10-this.y)][2.5+this.z]=1;
         this.y=Math.floor(this.y)+0.2;
+        this.level = Math.floor(10-this.y);
+
       }
       else if (this.align()===1) {
         positions[2.5+this.x][Math.floor(9-this.y)][2.5+this.z-1]=1;
         positions[2.5+this.x][Math.floor(9-this.y)][2.5+this.z]=1;
         positions[2.5+this.x][Math.floor(9-this.y)][2.5+this.z+1]=1;
         this.y=Math.floor(this.y)+0.2;
+        this.level = Math.floor(9-this.y);
+
       }
       else {
         positions[2.5+this.x-1][Math.floor(9-this.y)][2.5+this.z]=1;
         positions[2.5+this.x][Math.floor(9-this.y)][2.5+this.z]=1;
         positions[2.5+this.x+1][Math.floor(9-this.y)][2.5+this.z]=1;
         this.y=Math.floor(this.y)+0.2;
+        this.level = Math.floor(9-this.y);
       }
     }
 
@@ -322,8 +329,8 @@ class Cube {
           if (positions[2.5+this.x][Math.floor(11-this.y)][2.5+this.z]===1 ||this.y<=-8.9) {
             this.setPos()
           }
-          else if (this.y>-8.8) {
-            this.gravity=0.02;
+          else {
+            this.gravity=0.05;
           }
         }
         if (this.align()===1){
@@ -333,8 +340,8 @@ class Cube {
               this.y<=-9.9) {
             this.setPos()
           }
-          else if (this.y>-8.8) {
-            this.gravity=0.02;
+          else {
+            this.gravity=0.05;
           }
         }
         if (this.align()===2){
@@ -344,8 +351,8 @@ class Cube {
               this.y<=-9.9) {
             this.setPos()
           }
-          else if (this.y>-8.8) {
-            this.gravity=0.02;
+          else {
+            this.gravity=0.05;
           }
         }
     }
