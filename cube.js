@@ -9,6 +9,7 @@ class Cube {
         this.z=z;
 
         this.level;
+        this.falling = false;
 
         this.rotX=0;
         this.rotY=0;
@@ -121,6 +122,7 @@ class Cube {
         this.y=Math.floor(this.y)+0.2;
         this.level = Math.floor(9-this.y);
       }
+
     }
 
     xRotation(dir){
@@ -325,12 +327,25 @@ class Cube {
     move(){
         this.y-=this.gravity;
         this.keyHandlers();
+
+        if(this.y<-9.9 && (this.align === 1 || this.align === 2)){
+           this.y = -8;
+           this.setPos();
+        }
+        else if(this.y<-10){
+           this.y = -10;
+           this.setPos();
+        }
+        else {
         if (this.align()===0){
           if (positions[2.5+this.x][Math.floor(11-this.y)][2.5+this.z]===1 ||this.y<=-8.9) {
             this.setPos()
           }
           else {
-            this.gravity=0.05;
+            if(this.falling && !this.isDown)
+              this.gravity=0.29
+            else
+              this.gravity=0.05;
           }
         }
         if (this.align()===1){
@@ -341,7 +356,10 @@ class Cube {
             this.setPos()
           }
           else {
-            this.gravity=0.05;
+            if(this.falling && !this.isDown)
+              this.gravity=0.29
+            else
+              this.gravity=0.05;
           }
         }
         if (this.align()===2){
@@ -352,9 +370,13 @@ class Cube {
             this.setPos()
           }
           else {
-            this.gravity=0.05;
+            if(this.falling && !this.isDown)
+              this.gravity=0.29
+            else
+              this.gravity=0.05;
           }
         }
+      }
     }
 
 
@@ -421,10 +443,14 @@ class Cube {
             else if(eatKey(67)){
                 this.zRotation(270);
             }
+            else if(eatKey(32)){
+              this.falling = true;
+            }
             this.left=0;
             this.front=0;
             this.back=0;
             this.right=0;
+
     }
   }
 }
