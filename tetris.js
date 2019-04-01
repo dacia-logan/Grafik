@@ -29,12 +29,7 @@ var setAlign = false;
 var colorLoc;
 var matrixLoc;
 var vPosition;
-var spawnPoints=[];
-for (var i = -2.5; i <= 2.5; i+=1) {
-  for (var y = -2.5; y <= 2.5; y+=1) {
-    spawnPoints.push([i,y])
-  }
-}
+
 
 
 window.onload = function init()
@@ -159,12 +154,37 @@ function drawCubes(mv){
     for(var i = 0; i<cubes.length; i++){
         cubes[i].move();
         cubes[i].draw(mv);
-        console.log(cubes[i].x+ ", "+cubes[i].z);
+        
 
     }
 
 }
 
+function checkFullPlane(){
+
+    for(var i = 0; i<20; i++){
+        var counter = 0;
+        for(var j = 0; j<6; j++){
+            for(var k = 0; k<6; k++){
+                if(positions[j][i][k]===1){
+                    counter ++;
+                }
+                if(counter === 36){  
+                    for(var l = 0; l<6; l++){
+                        for(var s = 0; s<6; s++){
+                            positions[s][i][l]=0;
+                            for(var m = 0; m<cubes.length; m++){
+                                if(cubes[m].level === i)
+                                    cubes.splice(m,1);
+                            }
+                        }
+                    }       
+                }
+            }
+        }
+    counter = 0;   
+    }
+}
 
 
 
@@ -267,7 +287,7 @@ function render()
     mv = mult( mv, rotateX(spinX) );
     mv = mult( mv, rotateY(spinY) );
 
-
+    checkFullPlane();
     field(mv);
     drawCubes(mv);
 
